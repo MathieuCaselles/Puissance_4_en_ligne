@@ -6,7 +6,7 @@ namespace Matchmaking
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Serveur.StartServer();
         }
     }
 }
