@@ -40,6 +40,11 @@ namespace Matchmaking
                    this.buffer, 0, bytesRead));
         }
 
+        public void clearStringData()
+        {
+            this.sb.Clear();
+        }
+
         public String getStringData()
         {
             return this.sb.ToString();
@@ -55,7 +60,7 @@ namespace Matchmaking
             return this.pseudo;
         }
 
-        public override string ToString()
+        public override String ToString()
         {
             return this.pseudo;
         }

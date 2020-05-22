@@ -2,14 +2,14 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Matchmaking
 {
     public class Serveur
     {
 
-  
+        public static int nbrPartie = 0;
 
         public static void StartServer()
         {
@@ -26,21 +26,22 @@ namespace Matchmaking
             {
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
-
+                Console.WriteLine("Serveur démarré.");
                 while (true)
                 {
-                    Console.WriteLine("En attente de client 1...");
+                    Console.WriteLine($"Nombre de parties en cours : {nbrPartie}");
+
                     Socket firstClient = listener.Accept();
                     Client client1 = new Client(firstClient, "Client 1");
+                    client1.getWorkSocket().Send(Encoding.UTF8.GetBytes("Recherche d'un adversaire..."));
 
-                    Console.WriteLine("En attente de client 2...");
                     Socket secondClient = listener.Accept();
                     Client client2 = new Client(secondClient, "Client 2");
 
-
-                    new PartieEnCours(client1, client2);
-
-                    Console.WriteLine("Partie lancée ! glhf !");
+                    Task.Run(() => {
+                        new PartieEnCours(client1, client2);
+                    });
+                    nbrPartie++;
                 }
 
             }
