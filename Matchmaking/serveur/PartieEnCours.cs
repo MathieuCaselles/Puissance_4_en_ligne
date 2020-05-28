@@ -37,7 +37,7 @@ namespace Matchmaking
                     jsonObjectClientJoue.Add("jeSuis", clientJoue.ToString());
                     jsonObjectClientJoue.Add("quiJoue", clientJoue.ToString());
                     jsonObjectClientJoue.Add("plateau", this.plateau.ToString());
-                    jsonObjectClientJoue.Add("message",  "C'est votre tour !");
+                    jsonObjectClientJoue.Add("message",  "C'est à vous de jouer !");
 
                     JObject jsonObjectClientAttente = new JObject();
                     jsonObjectClientAttente.Add("jeSuis", clientAttente.ToString());
@@ -50,20 +50,18 @@ namespace Matchmaking
                     this.Send(clientAttente.getWorkSocket(), jsonObjectClientAttente.ToString(Formatting.None) + "\n");
 
                     // récupérer colonne joué.
-                    clientJoue.appendStringData(clientJoue.getWorkSocket().Receive(clientJoue.getBuffer()));
+                    try
+                    {
+                        clientJoue.appendStringData(clientJoue.getWorkSocket().Receive(clientJoue.getBuffer()));
+                        int reponse = int.Parse(clientJoue.getStringData());
+                        this.plateau.Joue(reponse);
 
-
-                    int reponse = int.Parse(clientJoue.getStringData());
-                     /*
-                    this.Send(clientAttente.getWorkSocket(), $"\nVous avez joué dans la colonne {reponse}");
-                    this.Send(clientAttente.getWorkSocket(), $"\nle joueur {clientJoue} à joué dans la colonne {reponse}");*/
-
-                    //							System.out.print("Joueur "+ serveur.getP().getQuiJoue() +", quelle colonne ? ");
-                    this.plateau.Joue(reponse);
-                    /*
-                    this.Send(clientJoue.getWorkSocket(), this.plateau.ToString());
-                    this.Send(clientAttente.getWorkSocket(), this.plateau.ToString());
-                    */
+                    }
+                    catch (Exception)
+                    {
+                        this.SendError();
+                        break;
+                    }
 
                     this.plateau.changeJoueur();
                     clientJoue.clearStringData();
@@ -127,6 +125,35 @@ namespace Matchmaking
             // Begin sending the data to the remote device.  
             this.firstClient.getWorkSocket().Send(byteData);
             this.secondClient.getWorkSocket().Send(byteData);
+
+        }
+
+        private void SendError()
+        {
+            JObject obj = new JObject();
+            obj.Add("message", "Un joueur s'est déconnecté. Veuillez relancer une partie.");
+            obj.Add("plateau", this.plateau.ToString());
+            byte[] byteData = Encoding.UTF8.GetBytes(obj.ToString(Formatting.None));
+            // sending the data to the remote device.  
+            try
+            {
+                this.firstClient.getWorkSocket().Send(byteData);
+            }
+            catch (Exception)
+            {
+
+                Console.WriteLine("j1 déocnnecté");
+            }
+
+            try
+            {
+                this.secondClient.getWorkSocket().Send(byteData);
+            }
+            catch (Exception)
+            {
+
+                Console.WriteLine("j2 déocnnecté");
+            }
 
         }
 
