@@ -20,7 +20,7 @@ namespace Matchmaking
         public Client(Socket workSocket)
         {
             this.workSocket = workSocket;
-            this.pseudo = "PseudoTest";
+            this.pseudo = "null";
         }
 
         public Client(Socket workSocket, String pseudo)
@@ -58,6 +58,11 @@ namespace Matchmaking
         public String getPseudo()
         {
             return this.pseudo;
+        }
+
+        public void setPseudo(String pseudo)
+        {
+            this.pseudo = pseudo;
         }
 
         public override String ToString()

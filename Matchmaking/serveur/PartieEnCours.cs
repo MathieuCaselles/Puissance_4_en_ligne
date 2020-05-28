@@ -37,13 +37,13 @@ namespace Matchmaking
                     jsonObjectClientJoue.Add("jeSuis", clientJoue.ToString());
                     jsonObjectClientJoue.Add("quiJoue", clientJoue.ToString());
                     jsonObjectClientJoue.Add("plateau", this.plateau.ToString());
-                    jsonObjectClientJoue.Add("message",  "C'est à vous de jouer");
+                    jsonObjectClientJoue.Add("message",  "C'est votre tour !");
 
                     JObject jsonObjectClientAttente = new JObject();
                     jsonObjectClientAttente.Add("jeSuis", clientAttente.ToString());
                     jsonObjectClientAttente.Add("quiJoue", clientJoue.ToString());
                     jsonObjectClientAttente.Add("plateau", this.plateau.ToString());
-                    jsonObjectClientAttente.Add("message", "Attendez votre tour");
+                    jsonObjectClientAttente.Add("message", $"{clientJoue} est en train de jouer...");
 
 
                     this.Send(clientJoue.getWorkSocket(), jsonObjectClientJoue.ToString(Formatting.None) + "\n");
@@ -116,7 +116,7 @@ namespace Matchmaking
 
         private void SendResultat()
         {
-            String resultat = this.plateau.Gagne() == 1 ? $"\n{this.firstClient} a gagné\n" : $"\n{this.secondClient} a gagné\n";
+            String resultat = this.plateau.Gagne() == 1 ? $"\n{this.firstClient} est le grand gagnant !\n" : $"\n{this.secondClient} est le grand gagnant !\n";
 
             // Convert the string data to byte data using ASCII encoding.  
 
