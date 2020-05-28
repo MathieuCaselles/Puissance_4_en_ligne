@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -33,7 +35,12 @@ namespace Matchmaking
 
                     Socket firstClient = listener.Accept();
                     Client client1 = new Client(firstClient, "Client 1");
-                    client1.getWorkSocket().Send(Encoding.UTF8.GetBytes("Recherche d'un adversaire..."));
+                    JObject obj = new JObject();
+                    obj.Add("message", "En attente d'un adversaire...");
+
+                    String reponse = obj.ToString(Formatting.None) + "\n";
+
+                    client1.getWorkSocket().Send(Encoding.UTF8.GetBytes(reponse));
 
                     Socket secondClient = listener.Accept();
                     Client client2 = new Client(secondClient, "Client 2");

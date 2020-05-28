@@ -1,5 +1,8 @@
 ﻿using Matchmaking.jeu;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -19,6 +22,9 @@ namespace Matchmaking
 
             this.plateau = new Plateau();
             this.jeuEnCours = true;
+            
+            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+
 
             while (jeuEnCours)
             {
@@ -27,21 +33,37 @@ namespace Matchmaking
                     Client clientJoue = this.getPlayingClient(); 
                     Client clientAttente = this.getOpponentClient(clientJoue);
 
-                    this.Send(clientJoue.getWorkSocket(), "\nChoisissez une colonne entre 0 et 6\n");
-                    this.Send(clientAttente.getWorkSocket(), $"\nAttendez la fin du tour de {clientJoue}\n");
+                    JObject jsonObjectClientJoue = new JObject();
+                    jsonObjectClientJoue.Add("jeSuis", clientJoue.ToString());
+                    jsonObjectClientJoue.Add("quiJoue", clientJoue.ToString());
+                    jsonObjectClientJoue.Add("plateau", this.plateau.ToString());
+                    jsonObjectClientJoue.Add("message",  "C'est à vous de jouer");
+
+                    JObject jsonObjectClientAttente = new JObject();
+                    jsonObjectClientAttente.Add("jeSuis", clientAttente.ToString());
+                    jsonObjectClientAttente.Add("quiJoue", clientJoue.ToString());
+                    jsonObjectClientAttente.Add("plateau", this.plateau.ToString());
+                    jsonObjectClientAttente.Add("message", "Attendez votre tour");
+
+
+                    this.Send(clientJoue.getWorkSocket(), jsonObjectClientJoue.ToString(Formatting.None) + "\n");
+                    this.Send(clientAttente.getWorkSocket(), jsonObjectClientAttente.ToString(Formatting.None) + "\n");
 
                     // récupérer colonne joué.
                     clientJoue.appendStringData(clientJoue.getWorkSocket().Receive(clientJoue.getBuffer()));
 
-                    int reponse = int.Parse(clientJoue.getStringData());
 
+                    int reponse = int.Parse(clientJoue.getStringData());
+                     /*
                     this.Send(clientAttente.getWorkSocket(), $"\nVous avez joué dans la colonne {reponse}");
-                    this.Send(clientAttente.getWorkSocket(), $"\nle joueur {clientJoue} à joué dans la colonne {reponse}");
+                    this.Send(clientAttente.getWorkSocket(), $"\nle joueur {clientJoue} à joué dans la colonne {reponse}");*/
 
                     //							System.out.print("Joueur "+ serveur.getP().getQuiJoue() +", quelle colonne ? ");
                     this.plateau.Joue(reponse);
+                    /*
                     this.Send(clientJoue.getWorkSocket(), this.plateau.ToString());
                     this.Send(clientAttente.getWorkSocket(), this.plateau.ToString());
+                    */
 
                     this.plateau.changeJoueur();
                     clientJoue.clearStringData();
@@ -72,16 +94,6 @@ namespace Matchmaking
             return this.secondClient;
         }
 
-        public Socket getSocketFisrtClient()
-        {
-            return this.firstClient.getWorkSocket();
-        }
-
-        public Socket getSocketSecondClient()
-        {
-            return this.secondClient.getWorkSocket();
-        }
-
         public Client getPlayingClient()
         {
             return plateau.getQuiJoue() == 1 ? this.firstClient : this.secondClient;
@@ -102,13 +114,16 @@ namespace Matchmaking
             socketClient.Send(byteData);
         }
 
-        private async void SendResultat()
+        private void SendResultat()
         {
             String resultat = this.plateau.Gagne() == 1 ? $"\n{this.firstClient} a gagné\n" : $"\n{this.secondClient} a gagné\n";
 
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.UTF8.GetBytes(resultat);
 
+            JObject obj = new JObject();
+            obj.Add("message", resultat);
+            obj.Add("plateau", this.plateau.ToString());
+            byte[] byteData = Encoding.UTF8.GetBytes(obj.ToString(Formatting.None));
             // Begin sending the data to the remote device.  
             this.firstClient.getWorkSocket().Send(byteData);
             this.secondClient.getWorkSocket().Send(byteData);

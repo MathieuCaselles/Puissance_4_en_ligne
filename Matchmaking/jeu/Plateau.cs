@@ -7,22 +7,23 @@ namespace Matchmaking.jeu
     class Plateau
     {
 
-		public readonly static int taillePlateau = 7;
-		public Case[][] tab = new Case[taillePlateau][];
+		public readonly static int tailleLigne = 6;
+		public readonly static int tailleColonne = 7;
+		public Case[][] tab = new Case[tailleLigne][];
 		public int quiJoue = 1;
 
 
 		public Plateau()
 		{
 			//initialiser les colonne
-			for (int ligne = 0; ligne < taillePlateau; ligne++)
+			for (int ligne = 0; ligne < tailleLigne; ligne++)
 			{
-				this.tab[ligne] = new Case[taillePlateau];
+				this.tab[ligne] = new Case[tailleColonne];
 			}
 			//initialiser les Case
-			for (int ligne = 0; ligne < taillePlateau; ligne++)
+			for (int ligne = 0; ligne < tailleLigne; ligne++)
 			{
-				for (int colonne = 0; colonne < taillePlateau; colonne++)
+				for (int colonne = 0; colonne < tailleColonne; colonne++)
 				{
 					this.tab[ligne][colonne] = new Case();
 				}
@@ -44,9 +45,9 @@ namespace Matchmaking.jeu
 		public int Gagne()
 		{
 			// recherche dans le plateau les successions identiques horizontales
-			for (int ligne = 0; ligne < taillePlateau; ligne++)
+			for (int ligne = 0; ligne < tailleLigne; ligne++)
 			{
-				for (int colonne = 0; colonne < taillePlateau - 4; colonne++)
+				for (int colonne = 0; colonne < tailleColonne - 4; colonne++)
 				{
 					if (this.tab[ligne][colonne].getCase() != TypeCase.VIDE &&
 							this.tab[ligne][colonne].getCase() == this.tab[ligne][colonne + 1].getCase() &&
@@ -59,9 +60,9 @@ namespace Matchmaking.jeu
 			}
 
 
-			for (int ligne = 0; ligne < taillePlateau - 4; ligne++)
+			for (int ligne = 0; ligne < tailleLigne - 3; ligne++)
 			{
-				for (int colonne = 0; colonne < taillePlateau; colonne++)
+				for (int colonne = 0; colonne < tailleColonne; colonne++)
 				{
 					if (this.tab[ligne][colonne].getCase() != TypeCase.VIDE &&
 							this.tab[ligne][colonne].getCase() == this.tab[ligne + 1][colonne].getCase() &&
@@ -73,9 +74,9 @@ namespace Matchmaking.jeu
 				}
 			}
 
-			for (int ligne = 0; ligne < taillePlateau - 4; ligne++)
+			for (int ligne = 0; ligne < tailleLigne - 3; ligne++)
 			{
-				for (int colonne = 0; colonne < taillePlateau - 4; colonne++)
+				for (int colonne = 0; colonne < tailleColonne - 4; colonne++)
 				{
 					if (this.tab[ligne][colonne].getCase() != TypeCase.VIDE &&
 							this.tab[ligne][colonne].getCase() == this.tab[ligne + 1][colonne + 1].getCase() &&
@@ -87,9 +88,9 @@ namespace Matchmaking.jeu
 				}
 			}
 
-			for (int ligne = 0; ligne < taillePlateau - 4; ligne++)
+			for (int ligne = 0; ligne < tailleLigne - 3; ligne++)
 			{
-				for (int colonne = taillePlateau - 4; colonne < taillePlateau; colonne++)
+				for (int colonne = tailleColonne - 4; colonne < tailleColonne; colonne++)
 				{
 					if (this.tab[ligne][colonne].getCase() != TypeCase.VIDE &&
 							this.tab[ligne][colonne].getCase() == this.tab[ligne + 1][colonne - 1].getCase() &&
@@ -106,16 +107,15 @@ namespace Matchmaking.jeu
 		public override String ToString()
 		{
 			String res = "";
-			for (int ligne = taillePlateau - 1; ligne >= 0; ligne--)
+			for (int ligne = tailleLigne - 1; ligne >= 0; ligne--)
 			{
 				String lignePlateau = "";
-				for (int colonne = 0; colonne < taillePlateau; colonne++)
+				for (int colonne = 0; colonne < tailleColonne; colonne++)
 				{
 					lignePlateau += this.tab[ligne][colonne];
 				}
 				res += lignePlateau + "\n";
 			}
-			res += "-------\n0123456";
 			return res;
 		}
 
