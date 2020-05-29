@@ -31,9 +31,11 @@ namespace Matchmaking
             {
                 if (this.plateau.Gagne() == 0)
                 {
+                    // savoir qui joue et qui attend
                     Client clientJoue = this.getPlayingClient(); 
                     Client clientAttente = this.getOpponentClient(clientJoue);
 
+                    //envoie des données en fonction de si le joueur attend ou joue
                     JObject jsonObjectClientJoue = new JObject();
                     jsonObjectClientJoue.Add("jeSuis", clientJoue.ToString());
                     jsonObjectClientJoue.Add("quiJoue", clientJoue.ToString());
@@ -67,7 +69,7 @@ namespace Matchmaking
                         this.SendError();
                         this.jeuEnCours = false;
                     }
-
+                    
                     this.plateau.changeJoueur();
                     clientJoue.clearStringData();
                     clientAttente.clearStringData();
@@ -82,6 +84,8 @@ namespace Matchmaking
             }
             Serveur.nbrPartie--;
             Console.WriteLine($"Nombre de parties en cours : {Serveur.nbrPartie}");
+
+            //on coupe la connexion
             this.firstClient.getWorkSocket().Shutdown(SocketShutdown.Both);
             this.firstClient.getWorkSocket().Close();
             this.secondClient.getWorkSocket().Shutdown(SocketShutdown.Both);
@@ -132,14 +136,15 @@ namespace Matchmaking
         {
             String resultat = (this.plateau.Gagne() == 1 ? $"{this.firstClient.ToString().Replace("\n", String.Empty)} a gagné !" : $"{this.secondClient.ToString().Replace("\n", String.Empty)} a gagné !") + $" ({this.getCouleur()})\n";
 
-            // Convert the string data to byte data using ASCII encoding.  
 
             JObject obj = new JObject();
             obj.Add("message", resultat);
             obj.Add("plateau", this.plateau.ToString());
 
+            // Convert the string data to byte data using UTF8 encoding.  
+
             byte[] byteData = Encoding.UTF8.GetBytes(obj.ToString(Formatting.None));
-            // Begin sending the data to the remote device.  
+            //Sending the data to the remote device.  
             this.firstClient.getWorkSocket().Send(byteData);
             this.secondClient.getWorkSocket().Send(byteData);
 

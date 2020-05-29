@@ -33,21 +33,27 @@ namespace Matchmaking
                 {
                     Console.WriteLine($"Nombre de parties en cours : {nbrPartie}");
 
+                    //attente d'un joueur
                     Socket firstClient = listener.Accept();
+
+                    //création objet client
                     Client client1 = new Client(firstClient);
-                  
                     client1.setPseudo(firstClient.Receive(client1.getBuffer()));
+
+                    //signale au joueur d'attendre un adversaire
                     JObject obj = new JObject();
-
                     obj.Add("message", "En attente d'un adversaire...");
-
                     String reponse = obj.ToString(Formatting.None) + "\n";
-
                     client1.getWorkSocket().Send(Encoding.UTF8.GetBytes(reponse));
 
+                    //attente d'un joueur
                     Socket secondClient = listener.Accept();
+
+                    //création d'un client
                     Client client2 = new Client(secondClient);
                     client2.setPseudo(secondClient.Receive(client2.getBuffer()));
+
+                    //lancement de la partie
                     Task.Run(() => {
                         new PartieEnCours(client1, client2);
                     });
