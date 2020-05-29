@@ -62,6 +62,7 @@ namespace Matchmaking
 
         public void setPseudo(String pseudo)
         {
+            
             this.pseudo = pseudo;
         }
 

@@ -14,6 +14,7 @@ namespace Matchmaking
         private Client secondClient;
         private Plateau plateau;
         private Boolean jeuEnCours;
+        private string couleur = "ROUGE";
 
         public PartieEnCours(Client firstClient, Client secondClient)
         {
@@ -26,7 +27,7 @@ namespace Matchmaking
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
 
 
-            while (jeuEnCours)
+            while (this.jeuEnCours)
             {
                 if (this.plateau.Gagne() == 0)
                 {
@@ -38,12 +39,16 @@ namespace Matchmaking
                     jsonObjectClientJoue.Add("quiJoue", clientJoue.ToString());
                     jsonObjectClientJoue.Add("plateau", this.plateau.ToString());
                     jsonObjectClientJoue.Add("message",  "C'est à vous de jouer !");
+                    jsonObjectClientJoue.Add("couleur", this.getCouleur());
+
+                    this.toggleCouleur();
 
                     JObject jsonObjectClientAttente = new JObject();
                     jsonObjectClientAttente.Add("jeSuis", clientAttente.ToString());
                     jsonObjectClientAttente.Add("quiJoue", clientJoue.ToString());
                     jsonObjectClientAttente.Add("plateau", this.plateau.ToString());
-                    jsonObjectClientAttente.Add("message", $"{clientJoue} est en train de jouer...");
+                    jsonObjectClientAttente.Add("message", $"En attente de {clientJoue}...");
+                    jsonObjectClientAttente.Add("couleur", this.getCouleur());
 
 
                     this.Send(clientJoue.getWorkSocket(), jsonObjectClientJoue.ToString(Formatting.None) + "\n");
@@ -60,7 +65,7 @@ namespace Matchmaking
                     catch (Exception)
                     {
                         this.SendError();
-                        break;
+                        this.jeuEnCours = false;
                     }
 
                     this.plateau.changeJoueur();
@@ -70,8 +75,9 @@ namespace Matchmaking
                 }
                 else
                 {
+                    this.toggleCouleur();
                     this.SendResultat();
-                    jeuEnCours = false;
+                    this.jeuEnCours = false;
                 }
             }
             Serveur.nbrPartie--;
@@ -102,6 +108,16 @@ namespace Matchmaking
             return client == this.getFisrtClient() ? this.getSecondClient() : this.getFisrtClient();
         }
 
+        public string getCouleur()
+        {
+            return this.couleur;
+        }
+
+        public void toggleCouleur()
+        {
+            this.couleur = this.couleur == "ROUGE" ? "JAUNE" : "ROUGE";
+        }
+
 
         private void Send(Socket socketClient, String data)
         {
@@ -114,13 +130,14 @@ namespace Matchmaking
 
         private void SendResultat()
         {
-            String resultat = this.plateau.Gagne() == 1 ? $"\n{this.firstClient} est le grand gagnant !\n" : $"\n{this.secondClient} est le grand gagnant !\n";
+            String resultat = (this.plateau.Gagne() == 1 ? $"{this.firstClient.ToString().Replace("\n", String.Empty)} a gagné !" : $"{this.secondClient.ToString().Replace("\n", String.Empty)} a gagné !") + $" ({this.getCouleur()})\n";
 
             // Convert the string data to byte data using ASCII encoding.  
 
             JObject obj = new JObject();
             obj.Add("message", resultat);
             obj.Add("plateau", this.plateau.ToString());
+
             byte[] byteData = Encoding.UTF8.GetBytes(obj.ToString(Formatting.None));
             // Begin sending the data to the remote device.  
             this.firstClient.getWorkSocket().Send(byteData);
@@ -142,7 +159,7 @@ namespace Matchmaking
             catch (Exception)
             {
 
-                Console.WriteLine("j1 déocnnecté");
+                Console.WriteLine("j1 déconnecté");
             }
 
             try
@@ -152,7 +169,7 @@ namespace Matchmaking
             catch (Exception)
             {
 
-                Console.WriteLine("j2 déocnnecté");
+                Console.WriteLine("j2 déconnecté");
             }
 
         }
