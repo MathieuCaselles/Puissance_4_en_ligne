@@ -58,6 +58,7 @@ Exécutez ensuite le fichier `puissance4.jar`.
 Lorsque le jeu vous demande l'ip, rentrez `0.tcp.ngrok.io` que vous trouvez sur `tcp://0.tcp.ngrok.io:11062`de ngrok. Je rappel que le lien peut être différent pour vous.  
 Ensuite le jeu vous demande un port. Rentrez le numéro s'affichant après les deux points du lien ngrok. Dans cet exemple c'est `11062`.  
 Le jeu vous demande ensuite votre pseudo, puis lance la recherche de joueur rapide sur votre propre serveur perso ! 
+Bien entendu pour que vos ami puissent vous rejoindre, ils doivent rentrer la même adresse et le même port que vous pour se connecter à votre serveur.  
 
 Voila bon jeu ! 
 
