@@ -36,7 +36,7 @@ namespace Matchmaking
                     Socket firstClient = listener.Accept();
                     Client client1 = new Client(firstClient);
                   
-                    client1.setPseudo(Encoding.UTF8.GetString(client1.getBuffer(), 0, firstClient.Receive(client1.getBuffer())));
+                    client1.setPseudo(firstClient.Receive(client1.getBuffer()));
                     JObject obj = new JObject();
 
                     obj.Add("message", "En attente d'un adversaire...");
@@ -46,8 +46,8 @@ namespace Matchmaking
                     client1.getWorkSocket().Send(Encoding.UTF8.GetBytes(reponse));
 
                     Socket secondClient = listener.Accept();
-                    Client client2 = new Client(secondClient, "Client 2");
-                    client2.setPseudo(Encoding.UTF8.GetString(client2.getBuffer(), 0, secondClient.Receive(client2.getBuffer())));
+                    Client client2 = new Client(secondClient);
+                    client2.setPseudo(secondClient.Receive(client2.getBuffer()));
                     Task.Run(() => {
                         new PartieEnCours(client1, client2);
                     });

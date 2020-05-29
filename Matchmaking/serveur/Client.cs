@@ -15,18 +15,11 @@ namespace Matchmaking
         // Received data string.  
         private StringBuilder sb = new StringBuilder();
 
-        private String pseudo;
+        private StringBuilder pseudo = new StringBuilder();
 
         public Client(Socket workSocket)
         {
             this.workSocket = workSocket;
-            this.pseudo = "null";
-        }
-
-        public Client(Socket workSocket, String pseudo)
-        {
-            this.workSocket = workSocket;
-            this.pseudo = pseudo;
         }
 
         public Socket getWorkSocket()
@@ -57,18 +50,19 @@ namespace Matchmaking
 
         public String getPseudo()
         {
-            return this.pseudo;
+            return this.pseudo.ToString();
         }
 
-        public void setPseudo(String pseudo)
+        public void setPseudo(int pseudo)
         {
-            
-            this.pseudo = pseudo;
+            this.pseudo.Clear();
+            this.pseudo.Append(Encoding.UTF8.GetString(
+                   this.buffer, 0, pseudo));
         }
 
         public override String ToString()
         {
-            return this.pseudo;
+            return this.pseudo.ToString();
         }
     }
 }
