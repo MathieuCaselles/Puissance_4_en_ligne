@@ -22,22 +22,6 @@ Gestion des socket C#.
 
 ## Installation
 
-### Jouer sur le serveur public
-
-Téléchargez au choix le fichier `puissance4.jar`.
-Le fichier `puissance4.jar` ne peut être lu que si vous avez installé java : https://www.java.com/fr/download/.
-
-Exécutez le fichier. Il vous est alors demandé de choisir une ip et un port, puis si le client arrive à se connecter au serveur il vous demandera un pseudo sinon le client se fermera.  
-Une fois le pseudo choisit, la recherche d'un joueur adverse va se lancer automatiquement comme le montre la photo si dessous:  
-![100% center](screenDoc/rechercheAdversaire.jpg)
-
-Une fois un adversaire trouvé, le titre de l'application vous indique quand est'ce que c'est votre tour et quelle couleur vous jouez. Ce qui donne à chaque tour un de ces 2 cas:  
-![100% center](screenDoc/jeuxEnCours.jpg)
-
-La partie se termine quand un joueur à aligné 4 couleurs. Un message apparait annonçant le gagnant puis le jeu se ferme.
-
--> Le serveur est actuellement hors ligne je supprimerais cette phrase quand il sera de nouveau en ligne. En attendant vous pouvez jouer sur un serveur personalisé. Le jeu va d'ailleurs vous obliger à rentrer une ip et un port personalisé plutôt que de lancer instantanément une partie rapide sur le serveur public.
-
 ### Jouer sur un serveur personalisé
 
 Pour héberger votre propre serveur vous aurez besoin de ngrok: https://dashboard.ngrok.com/get-started/setup.
@@ -58,6 +42,13 @@ Exécutez ensuite le fichier `puissance4.jar`.
 Lorsque le jeu vous demande l'ip, rentrez `0.tcp.ngrok.io` que vous trouvez sur `tcp://0.tcp.ngrok.io:11062`de ngrok. Je rappel que le lien peut être différent pour vous.  
 Ensuite le jeu vous demande un port. Rentrez le numéro s'affichant après les deux points du lien ngrok. Dans cet exemple c'est `11062`.  
 Le jeu vous demande ensuite votre pseudo, puis lance la recherche de joueur rapide sur votre propre serveur perso !   
+Une fois le pseudo choisit, la recherche d'un joueur adverse va se lancer automatiquement comme le montre la photo si dessous:  
+![100% center](screenDoc/rechercheAdversaire.jpg)
+
+Une fois un adversaire trouvé, le titre de l'application vous indique quand est'ce que c'est votre tour et quelle couleur vous jouez. Ce qui donne à chaque tour un de ces 2 cas:  
+![100% center](screenDoc/jeuxEnCours.jpg)
+
+La partie se termine quand un joueur à aligné 4 couleurs. Un message apparait annonçant le gagnant puis le jeu se ferme.
 Bien entendu pour que vos ami puissent vous rejoindre, ils doivent rentrer la même adresse et le même port que vous pour se connecter à votre serveur.  
 
 Voila bon jeu ! 
